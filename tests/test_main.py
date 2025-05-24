@@ -1,16 +1,19 @@
-from unittest.mock import Mock, patch
+from pathlib import Path
+from unittest.mock import Mock
 
-import ehf_relay
+from sbdh_ubl_data.sbdh import StandardBusinessDocument
 
-@patch("ehf_relay._parse")
-def test_run_main(mock_parse):
-    mock_parse.return_value = "parsed"
+from ehf_relay import run
 
-    mock_source = Mock()
-    mock_source.return_value = ["A", "B", "C"]
+def mock_source():
+    data_path = Path(__file__).parent / "data" / "example1.xml"
+    with open(data_path, "r") as data_file:
+        return [data_file.read()]
+
+def test_run_main():
     mock_target = Mock()
-    mock_target.return_value = None
 
-    ehf_relay.run(mock_source, mock_target)
+    run(mock_source, mock_target)
 
-    assert mock_target.call_args.args[0] == "parsed"
+    result = mock_target.call_args.args[0]
+    assert type(result) is StandardBusinessDocument
