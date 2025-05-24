@@ -8,7 +8,7 @@ license = "Affero GPL 3.0"
 [tool.poetry.dependencies]
 python = "^3.10"
 pytest-cov = "^6.1.1"
-sbdh-ubl-data = "^0.1.0"
+sbdh-ubl-data = "^0.1.1"
 
 [tool.poetry.dev-dependencies]
 pylint = "^3.3.7"
