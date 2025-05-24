@@ -322,8 +322,16 @@ typing-extensions = {version = ">=4.0.0,<5.0", markers = "python_version < \"3.1
 jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
+name = "ruff"
+version = "0.11.11"
+description = "An extremely fast Python linter and code formatter, written in Rust."
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "sbdh-ubl-data"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 category = "main"
 optional = false
@@ -388,7 +396,7 @@ test = ["pre-commit", "pytest", "pytest-benchmark", "pytest-cov"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "b5af7119403a2f43e4916d4a40f97ec23f3db95d588e55560f815fa6323a7979"
+content-hash = "738758b6a1810ccab9faaff8f2344987d640e0359225ff914350609d3b19307d"
 
 [metadata.files]
 astroid = []
@@ -419,6 +427,7 @@ pytest = []
 pytest-cov = []
 pyyaml = []
 rich = []
+ruff = []
 sbdh-ubl-data = []
 stevedore = []
 tomli = []
