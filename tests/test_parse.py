@@ -3,6 +3,8 @@ from os.path import splitext
 from pathlib import Path
 
 from sbdh_ubl_data.sbdh.standard_business_document_header import StandardBusinessDocument
+from sbdh_ubl_data.ubl.maindoc.ubl_credit_note_2_1 import CreditNote
+from sbdh_ubl_data.ubl.maindoc.ubl_invoice_2_1 import Invoice
 
 from ehf_relay import parse
 
@@ -18,6 +20,7 @@ def test_parse_example1():
         input_xml = data_file.read()
     result = parse(input_xml)
     assert type(result) is StandardBusinessDocument
+    assert type(result.other_element) is Invoice
 
 # Test data in the gitignored "private" subfolder or others will be used in
 # addition to the test data committed to the repo
@@ -31,4 +34,7 @@ def get_test_data():
 def test_parse_all():
     for data in get_test_data():
         result = parse(data)
+        payload = result.other_element
+
         assert type(result) is StandardBusinessDocument
+        assert type(payload) in [Invoice, CreditNote]
