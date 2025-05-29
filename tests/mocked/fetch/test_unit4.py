@@ -2,7 +2,7 @@ from unittest.mock import Mock, patch
 
 from requests import Response
 
-from ehf_relay.fetch.unit4 import fetch_messages
+from ehf_relay.fetch.unit4 import Unit4Fetcher
 from tests.data import read_data_file
 
 def mock_response(text: str) -> Mock:
@@ -20,8 +20,9 @@ def test_read_messages(mock_get):
         "https://ap-test.unit4.com/messages/5/xml-document": mock_response("Document 5")
     }
     mock_get.side_effect = lambda path, auth: responses[path]
+    fetcher = Unit4Fetcher(auth, "test/")
 
-    result = list(fetch_messages(auth, "test/"))
+    result = list(fetcher.fetch())
 
     assert result == ["Document 4", "Document 5"]
         
