@@ -20,10 +20,26 @@ toml = ["tomli (>=1.1.0)"]
 yaml = ["pyyaml"]
 
 [[package]]
+name = "certifi"
+version = "2025.4.26"
+description = "Python package for providing Mozilla's CA Bundle."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
+name = "charset-normalizer"
+version = "3.4.2"
+description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
-category = "main"
+category = "dev"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
 
@@ -31,7 +47,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7
 name = "coverage"
 version = "7.8.2"
 description = "Code coverage measurement for Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.9"
 
@@ -45,7 +61,7 @@ toml = ["tomli"]
 name = "exceptiongroup"
 version = "1.3.0"
 description = "Backport of PEP 654 (exception groups)"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 
@@ -56,10 +72,21 @@ typing-extensions = {version = ">=4.6.0", markers = "python_version < \"3.13\""}
 test = ["pytest (>=6)"]
 
 [[package]]
+name = "idna"
+version = "3.10"
+description = "Internationalized Domain Names in Applications (IDNA)"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+all = ["ruff (>=0.6.2)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "flake8 (>=7.1.1)"]
+
+[[package]]
 name = "iniconfig"
 version = "2.1.0"
 description = "brain-dead simple config-ini parsing"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.8"
 
@@ -96,7 +123,7 @@ python-versions = ">=3.7"
 name = "packaging"
 version = "25.0"
 description = "Core utilities for Python packages"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.8"
 
@@ -112,7 +139,7 @@ python-versions = ">=2.6"
 name = "pluggy"
 version = "1.6.0"
 description = "plugin and hook calling mechanisms for python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.9"
 
@@ -154,7 +181,7 @@ image = ["Pillow (>=8.0.0)"]
 name = "pytest"
 version = "8.3.5"
 description = "pytest: simple powerful testing with Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.8"
 
@@ -173,7 +200,7 @@ dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "pygments
 name = "pytest-cov"
 version = "6.1.1"
 description = "Pytest plugin for measuring coverage."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.9"
 
@@ -191,6 +218,24 @@ description = "YAML parser and emitter for Python"
 category = "dev"
 optional = false
 python-versions = ">=3.8"
+
+[[package]]
+name = "requests"
+version = "2.32.3"
+description = "Python HTTP for Humans."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+certifi = ">=2017.4.17"
+charset-normalizer = ">=2,<4"
+idna = ">=2.5,<4"
+urllib3 = ">=1.21.1,<3"
+
+[package.extras]
+socks = ["PySocks (>=1.5.6,!=1.5.7)"]
+use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "rich"
@@ -242,7 +287,7 @@ pbr = ">=2.0.0"
 name = "tomli"
 version = "2.2.1"
 description = "A lil' TOML parser"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.8"
 
@@ -253,6 +298,20 @@ description = "Backported and Experimental Type Hints for Python 3.8+"
 category = "main"
 optional = false
 python-versions = ">=3.8"
+
+[[package]]
+name = "urllib3"
+version = "2.4.0"
+description = "HTTP library with thread-safe connection pooling, file post, and more."
+category = "main"
+optional = false
+python-versions = ">=3.9"
+
+[package.extras]
+brotli = ["brotli (>=1.0.9)", "brotlicffi (>=0.8.0)"]
+h2 = ["h2 (>=4,<5)"]
+socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
+zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "xsdata"
@@ -275,13 +334,16 @@ test = ["pre-commit", "pytest", "pytest-benchmark", "pytest-cov"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "284be03a1f03ff8139040671675421aababb7dd1af741cdcb1e49b87f5969835"
+content-hash = "b1da20e788e3235d8d6291c7241f09d6ef1b711ccffa238c6f493f5613361889"
 
 [metadata.files]
 bandit = []
+certifi = []
+charset-normalizer = []
 colorama = []
 coverage = []
 exceptiongroup = []
+idna = []
 iniconfig = []
 markdown-it-py = []
 mdurl = []
@@ -293,10 +355,12 @@ pypdf = []
 pytest = []
 pytest-cov = []
 pyyaml = []
+requests = []
 rich = []
 ruff = []
 sbdh-ubl-data = []
 stevedore = []
 tomli = []
 typing-extensions = []
+urllib3 = []
 xsdata = []
