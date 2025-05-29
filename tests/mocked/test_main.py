@@ -6,7 +6,7 @@ from sbdh_ubl_data.sbdh import StandardBusinessDocument
 from ehf_relay import run
 
 def mock_source():
-    data_path = Path(__file__).parent / "data" / "example1.xml"
+    data_path = Path(__file__).parent.parent / "data" / "ehf" / "example1.xml"
     with open(data_path, "r") as data_file:
         return [data_file.read()]
 

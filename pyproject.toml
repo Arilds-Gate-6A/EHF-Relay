@@ -9,6 +9,7 @@ license = "Affero GPL 3.0"
 python = "^3.10"
 sbdh-ubl-data = "^0.1.1"
 requests = "^2.32.3"
+defusedxml = "^0.7.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^8.3.5"

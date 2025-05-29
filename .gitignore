@@ -177,4 +177,4 @@ cython_debug/
 .vscode
 
 # Private test data
-tests/data/private
+tests/data/ehf/private
