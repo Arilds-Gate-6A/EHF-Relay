@@ -23,17 +23,24 @@ class Unit4Fetcher(MessageFetcher):
             yield EhfMessage(doc_response.text, metadata)
 
     def fetch(self) -> Iterable[EhfMessage]:
-        inbox_response = get(self.base_url + "inbox", auth=self.auth)
-        message_tree = fromstring(inbox_response.text)
+        message_tree = self._read_inbox()
         while True:  # Break when there is no "next" link
             yield from self._read_message_page(message_tree)
             link_next = message_tree.find("./navigation/next")
             if link_next is not None and link_next.text:
-                inbox_response = get(link_next.text, auth=self.auth)
-                message_tree = fromstring(inbox_response.text)
+                message_tree = self._read_inbox(link_next.text)
             else:
                 break
 
     def mark_read(self, message: EhfMessage):
         message_id = message.metadata.find("id").text
         post(self.base_url + f"inbox/{message_id}/read")
+
+
+    # Send GET and parse response, throwing exception on error
+    def _read_inbox(self, url: str = None):
+        url = url or self.base_url + "inbox"
+        inbox_response = get(url, auth=self.auth)
+        if not inbox_response.status_code == 200:
+            raise IOError(f"HTTP Error {inbox_response.status_code}: {inbox_response.reason}")
+        return fromstring(inbox_response.text)

@@ -1,5 +1,6 @@
 from unittest.mock import Mock, patch
 
+from pytest import raises
 from requests import Response
 
 from ehf_relay.fetch.unit4 import Unit4Fetcher
@@ -11,6 +12,7 @@ AUTH = ("User", "Pass")
 
 def mock_response(text: str) -> Mock:
     mock_response = Mock(Response)
+    mock_response.status_code = 200
     mock_response.text = text
     return mock_response
 
@@ -84,6 +86,27 @@ def test_mark_messages_read(mock_post: Mock):
     mock_post.assert_called_once_with("test/inbox/20/read")
 
 
-# def test_response_error():
+# Raise exception if inbox GET fails
+@patch("ehf_relay.fetch.unit4.get")
+def test_bad_request(mock_get: Mock):
+    bad_request = Mock(Response)
+    bad_request.reason = "Bad request"
+    bad_request.status_code = 400
+    bad_request.text = "X"
+    responses = {
+        "test/inbox": bad_request,
+        "https://ap-test.unit4.com/messages/4/xml-document": mock_response(
+            "Document 4"
+        ),
+        "https://ap-test.unit4.com/messages/5/xml-document": mock_response(
+            "Document 5"
+        ),
+    }
+    mock_get.side_effect = lambda path, auth: responses[path]
+    fetcher = Unit4Fetcher(AUTH, "test/")
+
+    with raises(IOError, match="HTTP Error 400: Bad request"):
+        list(fetcher.fetch())
+
 
 # def test_get_message_error():
