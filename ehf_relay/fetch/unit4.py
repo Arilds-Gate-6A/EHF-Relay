@@ -1,4 +1,4 @@
-from requests import get
+from requests import get, post
 from typing import Iterable
 
 from defusedxml.ElementTree import fromstring
@@ -33,3 +33,7 @@ class Unit4Fetcher(MessageFetcher):
                 message_tree = fromstring(inbox_response.text)
             else:
                 break
+
+    def mark_read(self, message: EhfMessage):
+        message_id = message.metadata.find("id").text
+        post(self.base_url + f"inbox/{message_id}/read")

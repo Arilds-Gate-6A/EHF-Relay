@@ -3,6 +3,7 @@ from unittest.mock import Mock, patch
 from requests import Response
 
 from ehf_relay.fetch.unit4 import Unit4Fetcher
+from ehf_relay.model import EhfMessage
 from tests.data import read_data_file
 
 AUTH = ("User", "Pass")
@@ -69,7 +70,19 @@ def test_read_paginated_messages(mock_get: Mock):
     assert result == [f"Document {n}" for n in range(4, 9)]
 
 
-# def test_mark_messages_read():
+@patch("ehf_relay.fetch.unit4.post")
+def test_mark_messages_read(mock_post: Mock):
+    fetcher = Unit4Fetcher(AUTH, "test/")
+    mock_id = Mock()
+    mock_id.text = "20"
+    mock_meta = Mock()
+    mock_meta.find.return_value = mock_id
+    message = EhfMessage("xml", mock_meta)
+
+    fetcher.mark_read(message)
+
+    mock_post.assert_called_once_with("test/inbox/20/read")
+
 
 # def test_response_error():
 
