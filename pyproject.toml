@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ehfrelay"
+name = "ehf-relay"
 version = "0.1.0"
 description = ""
 authors = ["Anders Lehn Reed <anders.lehn.reed@gmail.com>"]
