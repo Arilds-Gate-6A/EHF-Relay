@@ -4,6 +4,7 @@ from typing import Iterable
 from defusedxml.ElementTree import fromstring
 
 from ehf_relay.fetch import MessageFetcher
+from ehf_relay.model import EhfMessage
 
 
 class Unit4Fetcher(MessageFetcher):
@@ -14,13 +15,14 @@ class Unit4Fetcher(MessageFetcher):
         self.base_url = base_url
 
     # Iterate messages from response XML
-    def _read_message_page(self, message_tree: str) -> Iterable[str]:
+    def _read_message_page(self, message_tree: str) -> Iterable[EhfMessage]:
         for message in message_tree.findall("./messages/message"):
             doc_link = message.find("xml-document").text
             doc_response = get(doc_link, auth=self.auth)
-            yield doc_response.text
+            metadata = message.find("message_meta_data")
+            yield EhfMessage(doc_response.text, metadata)
 
-    def fetch(self) -> Iterable[str]:
+    def fetch(self) -> Iterable[EhfMessage]:
         inbox_response = get(self.base_url + "inbox", auth=self.auth)
         message_tree = fromstring(inbox_response.text)
         while True:  # Break when there is no "next" link

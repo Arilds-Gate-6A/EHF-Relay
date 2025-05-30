@@ -29,7 +29,7 @@ def test_read_messages(mock_get: Mock):
     mock_get.side_effect = lambda path, auth: responses[path]
     fetcher = Unit4Fetcher(AUTH, "test/")
 
-    result = list(fetcher.fetch())
+    result = [item.raw_xml for item in fetcher.fetch()]
 
     assert result == ["Document 4", "Document 5"]
 
@@ -64,7 +64,7 @@ def test_read_paginated_messages(mock_get: Mock):
     mock_get.side_effect = lambda path, auth: responses[path]
     fetcher = Unit4Fetcher(AUTH, "test/")
 
-    result = list(fetcher.fetch())
+    result = [item.raw_xml for item in fetcher.fetch()]
 
     assert result == [f"Document {n}" for n in range(4, 9)]
 
