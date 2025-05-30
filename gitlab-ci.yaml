@@ -1,0 +1,29 @@
+stages:
+  - build
+  - test
+
+variables:
+  DOCKER_VERSION: 28.2.2-dind
+  PYTHON_VERSION: 3.13.3-alpine3.21
+  ODOO_VERSION: 18.0
+  POSTGRES_VERSION: 17.5-alpine3.21
+
+build-image:
+  stage: build
+  image: docker:$DOCKER_VERSION
+  services:
+    - docker:$DOCKER_VERSION
+  tags:
+    - dind
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t ehf-relay:$CI_COMMIT_SHA .
+    - docker tag ehf-relay:$CI_COMMIT_SHA ehf-relay:latest
+    - docker push --all-tags ehf-relay
+
+pytest:
+  stage: build # can run while images build
+  image: python:$PYTHON_VERSION-slim-bookworm
+  script:
+    - pip install poetry
+    - poetry run pytest tests/mocked
