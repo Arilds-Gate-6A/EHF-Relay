@@ -3,6 +3,7 @@ from typing import Iterable
 
 from defusedxml.ElementTree import fromstring
 
+from ehf_relay.config import REQUEST_TIMEOUT
 from ehf_relay.fetch import MessageFetcher
 from ehf_relay.model import EhfMessage
 
@@ -18,7 +19,7 @@ class Unit4Fetcher(MessageFetcher):
     def _read_message_page(self, message_tree: str) -> Iterable[EhfMessage]:
         for message in message_tree.findall("./messages/message"):
             doc_link = message.find("xml-document").text
-            doc_response = get(doc_link, auth=self.auth)
+            doc_response = get(doc_link, auth=self.auth, timeout=REQUEST_TIMEOUT)
             MessageFetcher._raise_if_error(doc_response)
             metadata = message.find("message_meta_data")
             yield EhfMessage(doc_response.text, metadata)
@@ -35,12 +36,16 @@ class Unit4Fetcher(MessageFetcher):
 
     def mark_read(self, message: EhfMessage):
         message_id = message.metadata.find("id").text
-        post(self.base_url + f"inbox/{message_id}/read")
+        post(
+            self.base_url + f"inbox/{message_id}/read",
+            auth=self.auth,
+            timeout=REQUEST_TIMEOUT,
+        )
 
     # Send GET and parse response, throwing exception on error
     def _read_inbox(self, url: str = None):
         url = url or self.base_url + "inbox"
-        inbox_response = get(url, auth=self.auth)
+        inbox_response = get(url, auth=self.auth, timeout=REQUEST_TIMEOUT)
         MessageFetcher._raise_if_error(inbox_response)
         Unit4Fetcher._raise_if_error(inbox_response)
         return fromstring(inbox_response.text)

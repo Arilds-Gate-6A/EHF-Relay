@@ -29,7 +29,7 @@ def test_read_messages(mock_get: Mock):
             "Document 5"
         ),
     }
-    mock_get.side_effect = lambda path, auth: responses[path]
+    mock_get.side_effect = lambda path, auth, timeout: responses[path]
     fetcher = Unit4Fetcher(AUTH, "test/")
 
     result = [item.raw_xml for item in fetcher.fetch()]
@@ -64,7 +64,7 @@ def test_read_paginated_messages(mock_get: Mock):
             "Document 8"
         ),
     }
-    mock_get.side_effect = lambda path, auth: responses[path]
+    mock_get.side_effect = lambda path, auth, timeout: responses[path]
     fetcher = Unit4Fetcher(AUTH, "test/")
 
     result = [item.raw_xml for item in fetcher.fetch()]
@@ -83,7 +83,7 @@ def test_mark_messages_read(mock_post: Mock):
 
     fetcher.mark_read(message)
 
-    mock_post.assert_called_once_with("test/inbox/20/read")
+    mock_post.assert_called_once_with("test/inbox/20/read", auth=AUTH, timeout=20)
 
 
 # Raise exception if inbox GET fails
@@ -101,7 +101,7 @@ def test_bad_request(mock_get: Mock):
             "Document 5"
         ),
     }
-    mock_get.side_effect = lambda path, auth: responses[path]
+    mock_get.side_effect = lambda path, auth, timeout: responses[path]
     fetcher = Unit4Fetcher(AUTH, "test/")
 
     with raises(IOError, match="HTTP Error 400: Bad request"):
@@ -120,10 +120,8 @@ def test_not_found(mock_get: Mock):
             "Document 5"
         ),
     }
-    mock_get.side_effect = lambda path, auth: responses[path]
+    mock_get.side_effect = lambda path, auth, timeout: responses[path]
     fetcher = Unit4Fetcher(AUTH, "test/")
 
     with raises(IOError, match="HTTP Error 404: Not found"):
         list(fetcher.fetch())
-
-# def test_get_message_error():
