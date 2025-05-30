@@ -19,6 +19,7 @@ class Unit4Fetcher(MessageFetcher):
         for message in message_tree.findall("./messages/message"):
             doc_link = message.find("xml-document").text
             doc_response = get(doc_link, auth=self.auth)
+            MessageFetcher._raise_if_error(doc_response)
             metadata = message.find("message_meta_data")
             yield EhfMessage(doc_response.text, metadata)
 
@@ -36,11 +37,10 @@ class Unit4Fetcher(MessageFetcher):
         message_id = message.metadata.find("id").text
         post(self.base_url + f"inbox/{message_id}/read")
 
-
     # Send GET and parse response, throwing exception on error
     def _read_inbox(self, url: str = None):
         url = url or self.base_url + "inbox"
         inbox_response = get(url, auth=self.auth)
-        if not inbox_response.status_code == 200:
-            raise IOError(f"HTTP Error {inbox_response.status_code}: {inbox_response.reason}")
+        MessageFetcher._raise_if_error(inbox_response)
+        Unit4Fetcher._raise_if_error(inbox_response)
         return fromstring(inbox_response.text)

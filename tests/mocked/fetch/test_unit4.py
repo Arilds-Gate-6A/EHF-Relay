@@ -92,7 +92,6 @@ def test_bad_request(mock_get: Mock):
     bad_request = Mock(Response)
     bad_request.reason = "Bad request"
     bad_request.status_code = 400
-    bad_request.text = "X"
     responses = {
         "test/inbox": bad_request,
         "https://ap-test.unit4.com/messages/4/xml-document": mock_response(
@@ -108,5 +107,23 @@ def test_bad_request(mock_get: Mock):
     with raises(IOError, match="HTTP Error 400: Bad request"):
         list(fetcher.fetch())
 
+
+@patch("ehf_relay.fetch.unit4.get")
+def test_not_found(mock_get: Mock):
+    not_found = Mock(Response)
+    not_found.reason = "Not found"
+    not_found.status_code = 404
+    responses = {
+        "test/inbox": mock_response(read_data_file("unit4/inbox-response1.xml")),
+        "https://ap-test.unit4.com/messages/4/xml-document": not_found,
+        "https://ap-test.unit4.com/messages/5/xml-document": mock_response(
+            "Document 5"
+        ),
+    }
+    mock_get.side_effect = lambda path, auth: responses[path]
+    fetcher = Unit4Fetcher(AUTH, "test/")
+
+    with raises(IOError, match="HTTP Error 404: Not found"):
+        list(fetcher.fetch())
 
 # def test_get_message_error():
