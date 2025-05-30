@@ -1,0 +1,25 @@
+<inbox-query-response version="1.0">
+    <navigation>
+        <next>https://ap-test.unit4.com/messages?index=7</next>
+        <previous>https://ap-test.unit4.com/messages?index=5</previous>
+    </navigation>
+    <messages>
+        <message>
+            <self>https://ap-test.unit4.com/inbox/6</self>
+            <xml-document>https://ap-test.unit4.com/messages/6/xml-document</xml-document>
+            <message-meta-data>
+                <msg-no>6</msg-no>
+                <direction>IN</direction>
+                <received>2012-01-25T20:04:07.000+01:00</received>
+                <uuid>275e0490-c276-4c53-93b9-f0d17641ac0a</uuid>
+                <peppol-header>
+                    <sender>0192:976098897</sender>
+                    <receiver>0192:976098897</receiver>
+                    <channel></channel>
+                    <document-id>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1</document-id>
+                    <process-id>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</process-id>
+                </peppol-header>
+            </message-meta-data>
+        </message>
+    </messages>
+</inbox-query-response>

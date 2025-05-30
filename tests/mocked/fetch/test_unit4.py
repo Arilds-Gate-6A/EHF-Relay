@@ -5,28 +5,69 @@ from requests import Response
 from ehf_relay.fetch.unit4 import Unit4Fetcher
 from tests.data import read_data_file
 
+AUTH = ("User", "Pass")
+
+
 def mock_response(text: str) -> Mock:
     mock_response = Mock(Response)
     mock_response.text = text
     return mock_response
 
+
 # Should return the linked xml document for each message in the inbox
 @patch("ehf_relay.fetch.unit4.get")
-def test_read_messages(mock_get):
-    auth = ("User", "Pass")
+def test_read_messages(mock_get: Mock):
     responses = {
         "test/inbox": mock_response(read_data_file("unit4/inbox-response1.xml")),
-        "https://ap-test.unit4.com/messages/4/xml-document": mock_response("Document 4"),
-        "https://ap-test.unit4.com/messages/5/xml-document": mock_response("Document 5")
+        "https://ap-test.unit4.com/messages/4/xml-document": mock_response(
+            "Document 4"
+        ),
+        "https://ap-test.unit4.com/messages/5/xml-document": mock_response(
+            "Document 5"
+        ),
     }
     mock_get.side_effect = lambda path, auth: responses[path]
-    fetcher = Unit4Fetcher(auth, "test/")
+    fetcher = Unit4Fetcher(AUTH, "test/")
 
     result = list(fetcher.fetch())
 
     assert result == ["Document 4", "Document 5"]
-        
-# def test_read_paginated_messages():
+
+
+# Reads paginated inbox results
+@patch("ehf_relay.fetch.unit4.get")
+def test_read_paginated_messages(mock_get: Mock):
+    responses = {
+        "test/inbox": mock_response(read_data_file("unit4/inbox-response2-1.xml")),
+        "https://ap-test.unit4.com/messages?index=6": mock_response(
+            read_data_file("unit4/inbox-response2-2.xml")
+        ),
+        "https://ap-test.unit4.com/messages?index=7": mock_response(
+            read_data_file("unit4/inbox-response2-3.xml")
+        ),
+        "https://ap-test.unit4.com/messages/4/xml-document": mock_response(
+            "Document 4"
+        ),
+        "https://ap-test.unit4.com/messages/5/xml-document": mock_response(
+            "Document 5"
+        ),
+        "https://ap-test.unit4.com/messages/6/xml-document": mock_response(
+            "Document 6"
+        ),
+        "https://ap-test.unit4.com/messages/7/xml-document": mock_response(
+            "Document 7"
+        ),
+        "https://ap-test.unit4.com/messages/8/xml-document": mock_response(
+            "Document 8"
+        ),
+    }
+    mock_get.side_effect = lambda path, auth: responses[path]
+    fetcher = Unit4Fetcher(AUTH, "test/")
+
+    result = list(fetcher.fetch())
+
+    assert result == [f"Document {n}" for n in range(4, 9)]
+
 
 # def test_mark_messages_read():
 
